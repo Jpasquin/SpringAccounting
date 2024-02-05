@@ -1,0 +1,59 @@
+version: '3.8'
+services:
+  node_backend:
+    build:
+      context: ./docker/node_backend
+    container_name: search_theme_node_backend
+    ports: 
+      - "8024:8024"
+    environment:
+      UID: ${UID}
+      GID: ${GID}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DB: ${MYSQL_DB}
+      MYSQL_HOST: ${MYSQL_HOST}
+      TERM: "xterm"
+    volumes:
+      - ./backend:/var/www/html/
+    depends_on:
+      - db
+  node:
+    build:
+      context: ./docker/node
+    environment:
+      TERM: "xterm"
+    container_name: search_theme_node
+    ports:
+      - "8123:8123"
+    volumes:
+      - ./frontend:/app
+  redis:
+    image: redis
+    container_name: search_theme_redis
+    ports:
+      - "8623:6379"
+    volumes:
+      - redis:/data
+  db:
+    image: mariadb
+    container_name: search_theme_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB}
+    volumes:
+      - db:/var/lib/mysql
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+  adminer:
+    image: adminer
+    container_name: search_theme_adminer
+    ports:
+      - 8523:8080
+volumes:
+  db:
+  redis:
