@@ -1,8 +1,8 @@
-# Search Theme V2
+# SpringAccounting
 
 ## Authors
-Jonathan Pasquin,
-Lucas Catchlove
+- Jonathan Pasquin
+- Lucas Catchlove
 
 ## Pre-requisites
 - Docker Desktop
